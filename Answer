@@ -1,0 +1,92 @@
+#!/bin/python3
+
+import math
+import os
+import random
+import re
+import sys
+
+numbers_in_words = {
+    0: "o' clock", 1: "one", 2: "two", 3: "three", 4: "four",
+    5: "five", 6: "six", 7: "seven", 8: "eight", 9: "nine",
+    10: "ten", 11: "eleven", 12: "twelve", 13: "thirteen", 14: "fourteen",
+    15: "quarter", 16: "sixteen", 17: "seventeen", 18: "eighteen", 19: "nineteen",
+    20: "twenty", 21: "twenty one", 22: "twenty two", 23: "twenty three", 24: "twenty four",
+    25: "twenty five", 26: "twenty six", 27: "twenty seven", 28: "twenty eight", 29: "twenty nine",
+    30: "half"
+}
+
+def min_zero(h, m):
+    result = "{} {}".format(numbers_in_words[h], numbers_in_words[m])
+    return result
+
+
+def min_one(h, m):
+    result = "{} minute past {}".format(numbers_in_words[m], numbers_in_words[h])
+    return result
+
+
+def min_fifteen(h, m):
+    result = "{} past {}".format(numbers_in_words[m], numbers_in_words[h])
+    return result
+
+
+def min_less_thirty(h, m):
+    result = "{} minutes past {}".format(numbers_in_words[m], numbers_in_words[h])
+    return result
+
+
+# 60-m / h+1
+def change_min_hour(hr, mn):
+    mn = 60 - mn
+    hr = 1 + hr
+    return hr, mn
+
+
+def min_fiftynine(hr, mn):
+    result = "one minute to {}".format(numbers_in_words[hr])
+    return result
+
+def min_fortyfive(hr, mn):
+    hr, mn= change_min_hour(hr, mn)
+    result = "quarter to {}".format(numbers_in_words[hr])
+    return result
+
+
+def min_more_thirty(hr, mn):
+    hr, mn = change_min_hour(hr, mn)
+    result = "{} minutes to {}".format(numbers_in_words[mn], numbers_in_words[hr])
+    return result
+
+
+
+def timeInWords(h, m):
+    result = ''
+    if m == 0:
+        result = min_zero(h, m)
+    elif m == 1:
+        result = min_one(h, m)
+    elif m == 15 or m == 30:
+        result = min_fifteen(h, m)
+    elif m < 30:
+        result = min_less_thirty(h, m)
+    elif m == 45:
+        result = min_fortyfive(h, m)
+    elif m == 59:
+        result = min_fiftynine(h, m)
+    elif m >= 31:
+        result = min_more_thirty(h, m)
+    return result
+
+if __name__ == '__main__':
+    fptr = open(os.environ['OUTPUT_PATH'], 'w')
+
+    h = int(input())
+
+    m = int(input())
+
+    result = timeInWords(h, m)
+
+    fptr.write(result + '\n')
+
+    fptr.close()
